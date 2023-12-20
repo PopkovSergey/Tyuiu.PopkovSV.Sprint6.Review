@@ -19,6 +19,10 @@ namespace Tyuiu.PopkovSV.Sprint6.TaskReview.V30
         }
         Random rn = new Random();
         DataService ds = new DataService();
+        static int[,] mtrx;
+        static int[,] matrix;
+        static int rows;
+        static int columns;
         private void buttonHelp_PSV_Click(object sender, EventArgs e)
         {
             FormAbout_PSV formAbout = new FormAbout_PSV();
@@ -30,21 +34,38 @@ namespace Tyuiu.PopkovSV.Sprint6.TaskReview.V30
 
         }
 
-        
+
 
         private void buttonDone_PSV_Click(object sender, EventArgs e)
         {
-            int stroke = Convert.ToInt32(textBoxStroke_PSV.Text);
-            int columns = Convert.ToInt32(textBoxColumns_PSV.Text);
+            try
+            {
+
+                int RowNum = Convert.ToInt32(textBoxChooseStroke_PSV.Text);
+                int FirstNum = Convert.ToInt32(textBoxStartColumn_PSV.Text);
+                int LastNum = Convert.ToInt32(textBoxEndColumn_PSV.Text);
+                double res = ds.GetMatrix(matrix, RowNum, FirstNum, LastNum);
+                res = Math.Round((res / (LastNum - FirstNum + 1)), 3);
+                textBoxOutPut_PSV.Text = Convert.ToString(res);
+
+            }
+            catch
+            {
+                MessageBox.Show("Введены неверные данные", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void buttonGenerate_PSV_Click(object sender, EventArgs e)
+        {
+            rows = Convert.ToInt32(textBoxStroke_PSV.Text);
+            columns = Convert.ToInt32(textBoxColumns_PSV.Text);
 
             int StartStep = Convert.ToInt32(textBoxStart_PSV.Text);
             int StopStep = Convert.ToInt32(textBoxEnd_PSV.Text);
 
-
-            dataGridViewMatrix_PSV.RowCount = stroke;
+            dataGridViewMatrix_PSV.RowCount = rows;
             dataGridViewMatrix_PSV.ColumnCount = columns;
 
-            int[,] mtrx = new int[dataGridViewMatrix_PSV.RowCount, dataGridViewMatrix_PSV.ColumnCount];
+            mtrx = new int[dataGridViewMatrix_PSV.RowCount, dataGridViewMatrix_PSV.ColumnCount];
             int[] array = new int[] { };
             for (int i = 0; i < dataGridViewMatrix_PSV.RowCount; i++)
             {
@@ -74,44 +95,34 @@ namespace Tyuiu.PopkovSV.Sprint6.TaskReview.V30
             int w = mtrx.GetLength(0);
             int h = mtrx.GetLength(1);
 
-            int[,] mtrxT = new int[h, w];
+            matrix = new int[h, w];
             for (int i = 0; i < w; i++)
             {
                 for (int j = 0; j < h; j++)
                 {
-                    mtrxT[j, i] = mtrx[i, j];
+                    matrix[j, i] = mtrx[i, j];
                 }
             }
 
-
             try
             {
-
-
-                for (int i = 0; i < stroke; i++)
+                for (int i = 0; i < rows; i++)
                 {
                     for (int j = 0; j < columns; j++)
                     {
-                        dataGridViewMatrix_PSV.Rows[j].Cells[i].Value = Convert.ToString(mtrxT[j, i]);
+                        dataGridViewMatrix_PSV.Columns[i].Width = 35;
+                        dataGridViewMatrix_PSV.Rows[j].Cells[i].Value = Convert.ToString(matrix[j, i]);
                     }
                 }
 
-                int StrokeNum = Convert.ToInt32(textBoxChooseStroke_PSV.Text);
-                int FirstCol = Convert.ToInt32(textBoxStartColumn_PSV.Text);
-                int LastCol = Convert.ToInt32(textBoxEndColumn_PSV.Text);
 
-                textBoxOutPut_PSV.Text = Convert.ToString(ds.GetMatrix(mtrxT, StrokeNum, FirstCol, LastCol));
-
+                MessageBox.Show("Матрица сгенерирована", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch
             {
                 MessageBox.Show("Введены неверные данные", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
-
-        
-        
     }
     
 

@@ -25,7 +25,6 @@ namespace Tyuiu.PopkovSV.Sprint6.TaskReview.V30.Test
             double res = ds.GetMatrix(array, c, k, l);
             double wait = -8.0;
             Assert.AreEqual(wait, res);
-
         }
     }
 }

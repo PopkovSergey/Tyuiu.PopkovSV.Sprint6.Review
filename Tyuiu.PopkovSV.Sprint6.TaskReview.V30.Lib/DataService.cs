@@ -15,9 +15,12 @@ namespace Tyuiu.PopkovSV.Sprint6.TaskReview.V30.Lib
             {
                 res += array[c, i];
             }
-            res = Math.Round((res / ((l - k) + 1)), 3);
+
+
 
             return res;
+
         }
+
     }
 }
